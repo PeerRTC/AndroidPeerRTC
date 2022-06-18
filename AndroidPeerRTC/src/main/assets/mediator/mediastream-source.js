@@ -53,6 +53,8 @@ class MediaStreamSource{
 		this.#initMediaStreamConnection(null, htmlElement)
 	}
 
+
+
 	#getHtmlElement(type){
 		var htmlElement = null
 		if (type == MediaStreamSource.TYPE_AUDIO) {
@@ -73,6 +75,8 @@ class MediaStreamSource{
 		const mediaStreamConn = new MediaStreamConnection(stream)
 		this.mediaStreamConn = mediaStreamConn
 
+		var firstNegotation = true
+
 		mediaStreamConn.onnewtrack = (newTrack, trackStreams) => {
 			htmlElement.srcObject = trackStreams[0]
 			console.log("New track attached")
@@ -87,6 +91,15 @@ class MediaStreamSource{
 			console.log(JSON.stringify(sdp))
 		}
 
+
+		mediaStreamConn.onnegotiationneeded = ()=>{
+			if (firstNegotation) {
+				firstNegotation = false
+			} else{
+				mediaStreamConn.start()
+			}
+			
+		}
 
 		mediaStreamConn.start()
 	}

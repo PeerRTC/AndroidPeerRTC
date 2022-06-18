@@ -1,18 +1,30 @@
 const peer = new PeerRTC()
 
 const sourceConn = new MediaStreamConnection()
-const sourceMediaStream = new MediaStream()
+const receivedConn = new MediaStreamConnection()
 
-const receivedMediaStream = new MediaStream()
-const receivedConn = new MediaStreamConnection(receivedMediaStream)
+
+peer.onnewtrack = (newTrack, trackStreams) =>{
+	const stream = trackStreams[0]
+	if (trackStreams && stream) {
+		for(track of stream.getTracks()){
+			receivedConn.addTrack(track, stream)
+		}
+	}
+}
+
+peer.start(true, p=>{
+	console.log("A")
+})
+
+
 
 sourceConn.onnewtrack = (newTrack, trackStreams) => {
 	// send to peer connection
 	console.log("New track attached")
-	if (trackStreams && trackStreams[0]) {
-		for(track of trackStreams[0].getTracks()){
-			sourceMediaStream.addTrack(track)
-		}
+	const stream = trackStreams[0]
+	if (trackStreams && stream) {
+		peer.addMediaStream(stream)
 	}
 
 }
@@ -42,16 +54,4 @@ receivedConn.onicecandididate = (iceCandidates, sdp) => {
 receivedConn.start()
 
 
-peer.onnewtrack = (newTrack, trackStreams) =>{
-	if (trackStreams && trackStreams[0]) {
-		for(track of trackStreams[0].getTracks()){
-			receivedMediaStream	.addTrack(track)
-		}
-	}
-}
 
-peer.addMediaStream(sourceMediaStream)
-
-peer.start(true, p=>{
-console.log("A")
-})
