@@ -1,9 +1,9 @@
 class MediaStreamConnection{
 
 	#mediaStreamConn = null
-
+	#mediaStream = null
 	constructor(mediaStream){
-		this.#mediaStreamConn =  new BrowserRTC(null, mediaStream)
+		this.#mediaStream = mediaStream
 		this.onnewtrack = null
 		this.onConnectionEstablished = null
 		this.onicecandididate = null
@@ -12,7 +12,8 @@ class MediaStreamConnection{
 	}
 
 	start(){
-		const mediaStreamConn = this.#mediaStreamConn
+		const mediaStreamConn = new BrowserRTC(null, this.#mediaStream)
+		this.#mediaStreamConn =mediaStreamConn
 
 		const onicecandididate = (iceCandidates, sdp) => {
 			const onicecandididate = this.onicecandididate
