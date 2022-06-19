@@ -9,7 +9,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import shim.shim.androidpeerrtc.AndroidPeerJavascriptInterface
+import shim.shim.androidpeerrtc.javascriptinterface.MediaConnectionJavascriptInterface
+import shim.shim.androidpeerrtc.javascriptinterface.PeerJavascriptInterface
 import shim.shim.app.databinding.ActivityMainBinding
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -58,17 +59,20 @@ class MainActivity : AppCompatActivity() {
     private fun run() {
         val mediatorView = binding.mediatorView
         val mediaSourceView = binding.mediaSourceView
-        val mediatorInterface = AndroidPeerJavascriptInterface(this,mediatorView, mediaSourceView)
+        val  mediaReceivedView = binding.mediaReceivedView
+        val mediatorInterface = MediaConnectionJavascriptInterface(this,mediatorView, mediaSourceView, mediaReceivedView)
 
         mediatorView.settings.javaScriptEnabled = true
         mediatorView.webChromeClient = object:WebChromeClient(){
             override fun onConsoleMessage(message: String?, lineNumber: Int, sourceID: String?) {
-                Log.e("eee",message.toString())
+                Log.e("mediatorView",message.toString())
 
             }
 
         }
-        mediatorView.addJavascriptInterface(mediatorInterface, "Android")
+
+        mediatorView.addJavascriptInterface(mediatorInterface, MediaConnectionJavascriptInterface.NAME)
+        mediatorView.addJavascriptInterface(PeerJavascriptInterface(), PeerJavascriptInterface.NAME)
         mediatorView.loadUrl("file:///android_asset/mediator/mediator.html")
 
 
@@ -83,10 +87,9 @@ class MainActivity : AppCompatActivity() {
 
             override fun onPermissionRequest(request: PermissionRequest?) {
                 request?.grant(request.resources)
-                Log.e("Ee","Ee")
             }
         }
-        mediaSourceView.addJavascriptInterface(mediatorInterface, "Android")
+        mediaSourceView.addJavascriptInterface(mediatorInterface, MediaConnectionJavascriptInterface.NAME)
         mediaSourceView.loadUrl("file:///android_asset/mediator/mediastream-source.html")
 
         Executors.newSingleThreadExecutor().submit {
@@ -100,6 +103,20 @@ class MainActivity : AppCompatActivity() {
                 mediaSourceView.evaluateJavascript("createOffer()", null)
             }
         }
+
+
+        mediaReceivedView.settings.mediaPlaybackRequiresUserGesture = false
+        mediaReceivedView.settings.javaScriptEnabled = true
+        mediaReceivedView.webChromeClient = object:WebChromeClient(){
+            override fun onConsoleMessage(message: String?, lineNumber: Int, sourceID: String?) {
+                Log.e("mediaReceivedView",message.toString())
+
+            }
+
+
+        }
+        mediaReceivedView.addJavascriptInterface(mediatorInterface, MediaConnectionJavascriptInterface.NAME)
+        mediaReceivedView.loadUrl("file:///android_asset/mediator/mediastream-source.html")
 
 
     }

@@ -7,7 +7,6 @@ class MediaStreamConnection{
 		this.onnewtrack = null
 		this.onConnectionEstablished = null
 		this.onicecandididate = null
-		this.onnegotiationneeded = null
 		this.oncloseP2P = null
 	}
 
@@ -30,15 +29,24 @@ class MediaStreamConnection{
 			}
 		}
 
-		const onnegotiationneeded = ()=>{
-			const onnegotiationneeded = this.onnegotiationneeded
-			if (onnegotiationneeded) {
-				onnegotiationneeded()
+
+		const oncloseP2P = ()=>{
+			const oncloseP2P = this.oncloseP2P
+			if (oncloseP2P) {
+				oncloseP2P()
 			}
 		}
 
+		const onnewtrack = (newTrack, trackStreams)=>{
+			const onnewtrack = this.onnewtrack
+			if (onnewtrack) {
+				onnewtrack(newTrack, trackStreams)
+			}
+		}
+	
+
 		mediaStreamConn.addStreamToConnection()
-		mediaStreamConn.setCallbacks(onConnectionEstablished, this.oncloseP2P, onicecandididate , null, null, null, onnegotiationneeded, this.onnewtrack)
+		mediaStreamConn.setCallbacks(onConnectionEstablished, oncloseP2P, onicecandididate , null, null, null, ()=>{}, onnewtrack)
 	}
 
 
@@ -61,6 +69,8 @@ class MediaStreamConnection{
 	}
 
 
-	
+	close(){
+		this.#mediaStreamConn.close()
+	}
 
 }

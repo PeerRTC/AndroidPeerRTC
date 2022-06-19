@@ -66,7 +66,7 @@ class MediaStreamSource{
 					htmlElement.srcObject = stream
 				}
 
-				this.#initMediaStreamConnection(stream, htmlElement)
+				this.#initMediaStreamConnection(stream, htmlElement, false)
 			})
 		}
 		
@@ -97,7 +97,7 @@ class MediaStreamSource{
 
 	receiveStream(type){
 		const htmlElement = this.#getHtmlElement(type)
-		this.#initMediaStreamConnection(null, htmlElement)
+		this.#initMediaStreamConnection(null, htmlElement, true)
 	}
 
 
@@ -118,15 +118,12 @@ class MediaStreamSource{
 		return htmlElement
 	}
 
-	#initMediaStreamConnection(stream, htmlElement){
+	#initMediaStreamConnection(stream, htmlElement, isReceivingSource){
 		const mediaStreamConn = new MediaStreamConnection(stream)
 		this.mediaStreamConn = mediaStreamConn
 
-		var firstNegotation = true
-
 		mediaStreamConn.onnewtrack = (newTrack, trackStreams) => {
 			htmlElement.srcObject = trackStreams[0]
-			console.log("New track attached")
 		}
 
 		mediaStreamConn.onConnectionEstablished = () => {
@@ -134,20 +131,18 @@ class MediaStreamSource{
 		}
 
 		mediaStreamConn.onicecandididate = (sdp) => {
-			Android.onMediaStreamSourceSDP(JSON.stringify(sdp))
+			const stringifiedSDP = JSON.stringify(sdp)
+			if (isReceivingSource) {
+				AndroidMediaConnection.onMediaStreamReceivedAnswerSDP(stringifiedSDP)
+			} else{
+				AndroidMediaConnection.onMediaStreamSourceSDP(stringifiedSDP)
+			}
+			
 		
 		}
 
 
-		mediaStreamConn.onnegotiationneeded = ()=>{
-			if (firstNegotation) {
-				firstNegotation = false
-			} else{
-				mediaStreamConn.start()
-			}
-			
-		}
-
+		
 		mediaStreamConn.start()
 	}
 
@@ -165,12 +160,18 @@ function startStream(type, whichCam){
 
 function receiveStream(type){
 	source.receiveStream(type)
+	AndroidMediaConnection.connectMediaStreamReceivedToMediator()
 }
 
 function createOffer(){
 	source.mediaStreamConn.createOffer()
 }
 
+function createAnswer(sdp){
+	source.mediaStreamConn.createAnswer(sdp)
+}
+
 function saveAnswer(sdp){
 	source.mediaStreamConn.saveAnswer(sdp)
 }
+
