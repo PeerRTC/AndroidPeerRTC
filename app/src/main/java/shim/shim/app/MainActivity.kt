@@ -1,24 +1,18 @@
 package shim.shim.app
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.PackageManager
-import android.hardware.camera2.CameraCaptureSession
-import android.hardware.camera2.CameraDevice
-import android.hardware.camera2.CameraManager
-import android.media.MediaRecorder
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.SurfaceHolder
+import android.webkit.PermissionRequest
 import android.webkit.WebChromeClient
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import shim.shim.androidpeerrtc.AndroidPeerRTC
+import shim.shim.androidpeerrtc.AndroidPeerJavascriptInterface
 import shim.shim.app.databinding.ActivityMainBinding
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -62,11 +56,49 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun run() {
-        val webView = binding.webView
-        webView.settings.javaScriptEnabled = true
-        webView.webChromeClient = WebChromeClient()
-        webView.evaluateJavascript("alert('aa')"){
-            Log.e("Ee",it)
+        val mediatorView = binding.mediatorView
+        val mediaSourceView = binding.mediaSourceView
+        val mediatorInterface = AndroidPeerJavascriptInterface(this,mediatorView, mediaSourceView)
+
+        mediatorView.settings.javaScriptEnabled = true
+        mediatorView.webChromeClient = object:WebChromeClient(){
+            override fun onConsoleMessage(message: String?, lineNumber: Int, sourceID: String?) {
+                Log.e("eee",message.toString())
+
+            }
+
+        }
+        mediatorView.addJavascriptInterface(mediatorInterface, "Android")
+        mediatorView.loadUrl("file:///android_asset/mediator/mediator.html")
+
+
+
+        mediaSourceView.settings.javaScriptEnabled = true
+        mediaSourceView.settings.mediaPlaybackRequiresUserGesture = false
+        mediaSourceView.webChromeClient = object:WebChromeClient(){
+            override fun onConsoleMessage(message: String?, lineNumber: Int, sourceID: String?) {
+                Log.e("mediaSourceView",message.toString())
+
+            }
+
+            override fun onPermissionRequest(request: PermissionRequest?) {
+                request?.grant(request.resources)
+                Log.e("Ee","Ee")
+            }
+        }
+        mediaSourceView.addJavascriptInterface(mediatorInterface, "Android")
+        mediaSourceView.loadUrl("file:///android_asset/mediator/mediastream-source.html")
+
+        Executors.newSingleThreadExecutor().submit {
+            TimeUnit.SECONDS.sleep(2)
+            runOnUiThread {
+                mediaSourceView.evaluateJavascript("startStream(2, 1);", null)
+            }
+
+            TimeUnit.SECONDS.sleep(5)
+            runOnUiThread {
+                mediaSourceView.evaluateJavascript("createOffer()", null)
+            }
         }
 
 

@@ -33,9 +33,8 @@ sourceConn.onConnectionEstablished = () => {
 	console.log("New media stream connected")
 }
 
-sourceConn.onicecandididate = (iceCandidates, sdp) => {
-	console.log(JSON.stringify(iceCandidates))
-	console.log(JSON.stringify(sdp))
+sourceConn.onicecandididate = sdp=> {
+	Android.onMediatorStreamSourceAnswerSDP(JSON.stringify(sdp))
 }
 
 

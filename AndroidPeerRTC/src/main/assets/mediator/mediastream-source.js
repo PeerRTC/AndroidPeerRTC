@@ -51,7 +51,7 @@ class MediaStreamSource{
 			if (hasVideo) {
 				constraints.video = video
 			}
-			
+
 			if (hasAudio) {
 				constraints.audio = audio
 			}
@@ -69,6 +69,28 @@ class MediaStreamSource{
 				this.#initMediaStreamConnection(stream, htmlElement)
 			})
 		}
+		
+
+	}
+
+	getMediaDevices(onDevices){
+		navigator.mediaDevices.enumerateDevices().then(devices=>{
+			const results = {
+				audio:[],
+				video:[]
+			}
+			for(const device of devices){
+				const id = device.deviceId
+				switch(device.kind){
+					case "videoinput":
+						results.video.push(id)
+					case "audioinput":
+						results.audio.push(id)
+				}
+			}
+
+			onDevices(results)
+		})
 		
 
 	}
@@ -111,9 +133,9 @@ class MediaStreamSource{
 			console.log("New media stream connected")
 		}
 
-		mediaStreamConn.onicecandididate = (iceCandidates, sdp) => {
-			console.log(JSON.stringify(iceCandidates))
-			console.log(JSON.stringify(sdp))
+		mediaStreamConn.onicecandididate = (sdp) => {
+			Android.onMediaStreamSourceSDP(JSON.stringify(sdp))
+		
 		}
 
 
@@ -130,4 +152,25 @@ class MediaStreamSource{
 	}
 
 
+}
+
+
+const source = new MediaStreamSource()
+
+function startStream(type, whichCam){
+	source.getMediaDevices(devices=>{
+		source.startStream(type, devices.audio[0], devices.video[whichCam])
+	})
+}
+
+function receiveStream(type){
+	source.receiveStream(type)
+}
+
+function createOffer(){
+	source.mediaStreamConn.createOffer()
+}
+
+function saveAnswer(sdp){
+	source.mediaStreamConn.saveAnswer(sdp)
 }
