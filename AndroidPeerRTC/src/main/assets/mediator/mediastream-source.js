@@ -9,29 +9,54 @@ class MediaStreamSource{
 	}
 
 
-	startStream(type){
+	startStream(type, audioDeviceID, videoDeviceID){
 		const htmlElement = this.#getHtmlElement(type)
 		var promise = null
 
 		if (type == MediaStreamSource.TYPE_SCREEN) {
 			promise = navigator.mediaDevices.getDisplayMedia()
 		} else if([MediaStreamSource.TYPE_AUDIO, MediaStreamSource.TYPE_VIDEO, MediaStreamSource.TYPE_AUDIO_VIDEO].includes(type)) {
-			var video = false
-			var audio = false
+			const video = {
+				deviceId: videoDeviceID,
+				frameRate: {
+	                ideal: 60,
+	                min: 10
+	            }
+			}
+
+			const audio = {
+				deviceId: audioDeviceID,
+				echoCancellation:true ,
+				noiseSuppression:true
+			}
+
+			var hasVideo = false
+			var hasAudio = false
 			switch(type){
 				case MediaStreamSource.TYPE_AUDIO:
-					audio = true
+					hasAudio = true
 					break
 				case MediaStreamSource.TYPE_VIDEO:
-					video = true
+					hasVideo = true
 					break
 				case MediaStreamSource.TYPE_AUDIO_VIDEO:
-					audio = true
-					video = true
+					hasAudio = true
+					hasVideo = true
 					break
 			}
 
-			promise = navigator.mediaDevices.getUserMedia({audio:audio, video:video})
+
+			const constraints = {}
+
+			if (hasVideo) {
+				constraints.video = video
+			}
+			
+			if (hasAudio) {
+				constraints.audio = audio
+			}
+
+			promise = navigator.mediaDevices.getUserMedia(constraints)
 		}
 
 
