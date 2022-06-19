@@ -67,6 +67,7 @@ class MediaStreamSource{
 				}
 
 				this.#initMediaStreamConnection(stream, htmlElement, false)
+				source.mediaStreamConn.createOffer()
 			})
 		}
 		
@@ -163,9 +164,6 @@ function receiveStream(type){
 	AndroidMediaConnection.connectMediaStreamReceivedToMediator()
 }
 
-function createOffer(){
-	source.mediaStreamConn.createOffer()
-}
 
 function createAnswer(sdp){
 	source.mediaStreamConn.createAnswer(sdp)

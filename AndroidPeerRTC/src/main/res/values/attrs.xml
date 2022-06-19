@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MediaSourceView">
+        <attr name="mediaType" format="string">
+            <flag name="audio" value="1" />
+            <flag name="video" value="2" />
+            <flag name="both" value="3" />
+        </attr>
+        <attr name="cameraType" format="string">
+            <flag name="front" value="0" />
+            <flag name="back" value="1" />
+        </attr>
+
+
+    </declare-styleable>
+</resources>

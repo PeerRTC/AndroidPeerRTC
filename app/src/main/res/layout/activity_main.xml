@@ -10,11 +10,14 @@
 
 
     <shim.shim.androidpeerrtc.view.MediaSourceView
+        app:cameraType="back"
+        app:mediaType="video"
         android:id="@+id/mediaSourceView"
         android:layout_width="200dp"
         android:layout_height="200dp"/>
 
     <shim.shim.androidpeerrtc.view.MediaSourceView
+        app:mediaType="video"
         android:id="@+id/mediaReceivedView"
         android:layout_width="200dp"
         android:layout_height="200dp"/>

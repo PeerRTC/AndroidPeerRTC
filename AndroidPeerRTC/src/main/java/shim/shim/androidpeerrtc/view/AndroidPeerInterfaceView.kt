@@ -1,5 +1,6 @@
 package shim.shim.androidpeerrtc.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
@@ -9,13 +10,13 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.LinearLayout
 
+@SuppressLint("SetJavaScriptEnabled")
 abstract class AndroidPeerInterfaceView(context: Context, attr: AttributeSet?) : LinearLayout(context, attr) {
     protected abstract val htmlUrl: String
     protected abstract val TAG: String
 
     protected val webView = WebView(context)
-    var isLoaded = false
-
+    private var onPageLoaded:(()->Unit)? = null
 
     init {
         webView.also {
@@ -46,8 +47,7 @@ abstract class AndroidPeerInterfaceView(context: Context, attr: AttributeSet?) :
             it.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-                    isLoaded = true
-
+                    onPageLoaded?.invoke()
 
                 }
             }
@@ -60,6 +60,10 @@ abstract class AndroidPeerInterfaceView(context: Context, attr: AttributeSet?) :
 
     }
 
+    fun loadView(onLoad:(()->Unit)?){
+        this.onPageLoaded = onLoad
+        webView.loadUrl(htmlUrl)
+    }
     fun evaluateJavascript(script: String) {
         webView.evaluateJavascript(script, null)
     }

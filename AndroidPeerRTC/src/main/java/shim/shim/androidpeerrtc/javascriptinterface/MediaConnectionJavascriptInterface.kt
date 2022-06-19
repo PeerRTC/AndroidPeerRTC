@@ -14,8 +14,8 @@ import shim.shim.androidpeerrtc.view.MediatorView
 class MediaConnectionJavascriptInterface(
     private val activity: Activity,
     private val mediatorView: MediatorView,
-    private val mediaSourceView: MediaSourceView,
-    private val mediaReceivedView: MediaSourceView
+    private val mediaSourceView: MediaSourceView?,
+    private val mediaReceivedView: MediaSourceView?
 ) : AndroidPeerInterface{
     override val name: String = "AndroidMediaConnection"
 
@@ -30,7 +30,7 @@ class MediaConnectionJavascriptInterface(
     @JavascriptInterface
     fun onMediatorStreamSourceAnswerSDP(sdp: String) {
         activity.runOnUiThread {
-            mediaSourceView.evaluateJavascript("saveAnswer($sdp)")
+            mediaSourceView?.evaluateJavascript("saveAnswer($sdp)")
         }
 
     }
@@ -39,7 +39,7 @@ class MediaConnectionJavascriptInterface(
     @JavascriptInterface
     fun initReceiveMediaStreamSource() {
         activity.runOnUiThread {
-            mediaReceivedView.evaluateJavascript("receiveStream(2);")
+            mediaReceivedView?.evaluateJavascript("receiveStream(2);")
         }
     }
 
@@ -55,7 +55,7 @@ class MediaConnectionJavascriptInterface(
     @JavascriptInterface
     fun onMediatorOfferSDP(sdp: String) {
         activity.runOnUiThread {
-            mediaReceivedView.evaluateJavascript("createAnswer($sdp)")
+            mediaReceivedView?.evaluateJavascript("createAnswer($sdp)")
         }
     }
 
