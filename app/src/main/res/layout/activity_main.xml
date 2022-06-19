@@ -7,20 +7,18 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-    <WebView
-        android:id="@+id/mediatorView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"/>
 
-    <WebView
+
+    <shim.shim.androidpeerrtc.view.MediaSourceView
         android:id="@+id/mediaSourceView"
         android:layout_width="200dp"
         android:layout_height="200dp"/>
 
-    <WebView
+    <shim.shim.androidpeerrtc.view.MediaSourceView
         android:id="@+id/mediaReceivedView"
         android:layout_width="200dp"
         android:layout_height="200dp"/>
+
 
 
 

@@ -4,6 +4,8 @@ import android.app.Activity
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import shim.shim.androidpeerrtc.view.MediaSourceView
+import shim.shim.androidpeerrtc.view.MediatorView
 
 /**
  * Javascript interface for connecting media sources like
@@ -11,18 +13,16 @@ import android.webkit.WebView
  */
 class MediaConnectionJavascriptInterface(
     private val activity: Activity,
-    private val mediatorView: WebView,
-    private val mediaSourceView: WebView,
-    private val mediaReceivedView: WebView
-) {
-    companion object {
-        const val NAME = "AndroidMediaConnection"
-    }
+    private val mediatorView: MediatorView,
+    private val mediaSourceView: MediaSourceView,
+    private val mediaReceivedView: MediaSourceView
+) : AndroidPeerInterface{
+    override val name: String = "AndroidMediaConnection"
 
     @JavascriptInterface
     fun onMediaStreamSourceSDP(sdp: String) {
         activity.runOnUiThread {
-            mediatorView.evaluateJavascript("sourceConnCreateAnswer($sdp)", null)
+            mediatorView.evaluateJavascript("sourceConnCreateAnswer($sdp)")
         }
 
     }
@@ -30,7 +30,7 @@ class MediaConnectionJavascriptInterface(
     @JavascriptInterface
     fun onMediatorStreamSourceAnswerSDP(sdp: String) {
         activity.runOnUiThread {
-            mediaSourceView.evaluateJavascript("saveAnswer($sdp)", null)
+            mediaSourceView.evaluateJavascript("saveAnswer($sdp)")
         }
 
     }
@@ -39,7 +39,7 @@ class MediaConnectionJavascriptInterface(
     @JavascriptInterface
     fun initReceiveMediaStreamSource() {
         activity.runOnUiThread {
-            mediaReceivedView.evaluateJavascript("receiveStream(2);", null)
+            mediaReceivedView.evaluateJavascript("receiveStream(2);")
         }
     }
 
@@ -47,7 +47,7 @@ class MediaConnectionJavascriptInterface(
     @JavascriptInterface
     fun connectMediaStreamReceivedToMediator() {
         activity.runOnUiThread {
-            mediatorView.evaluateJavascript("receivedConn.createOffer()", null)
+            mediatorView.evaluateJavascript("receivedConn.createOffer()")
         }
     }
 
@@ -55,14 +55,14 @@ class MediaConnectionJavascriptInterface(
     @JavascriptInterface
     fun onMediatorOfferSDP(sdp: String) {
         activity.runOnUiThread {
-            mediaReceivedView.evaluateJavascript("createAnswer($sdp)", null)
+            mediaReceivedView.evaluateJavascript("createAnswer($sdp)")
         }
     }
 
     @JavascriptInterface
     fun onMediaStreamReceivedAnswerSDP(sdp: String) {
         activity.runOnUiThread {
-            mediatorView.evaluateJavascript("receivedConn.saveAnswer($sdp)", null)
+            mediatorView.evaluateJavascript("receivedConn.saveAnswer($sdp)")
         }
     }
 

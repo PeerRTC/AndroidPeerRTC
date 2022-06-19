@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import shim.shim.androidpeerrtc.javascriptinterface.MediaConnectionJavascriptInterface
 import shim.shim.androidpeerrtc.javascriptinterface.PeerJavascriptInterface
+import shim.shim.androidpeerrtc.view.MediaSourceView
+import shim.shim.androidpeerrtc.view.MediatorView
 import shim.shim.app.databinding.ActivityMainBinding
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -57,66 +59,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun run() {
-        val mediatorView = binding.mediatorView
+        val mediatorView = MediatorView(this,null)
         val mediaSourceView = binding.mediaSourceView
-        val  mediaReceivedView = binding.mediaReceivedView
+        val mediaReceivedView = binding.mediaReceivedView
         val mediatorInterface = MediaConnectionJavascriptInterface(this,mediatorView, mediaSourceView, mediaReceivedView)
 
-        mediatorView.settings.javaScriptEnabled = true
-        mediatorView.webChromeClient = object:WebChromeClient(){
-            override fun onConsoleMessage(message: String?, lineNumber: Int, sourceID: String?) {
-                Log.e("mediatorView",message.toString())
 
-            }
-
-        }
-
-        mediatorView.addJavascriptInterface(mediatorInterface, MediaConnectionJavascriptInterface.NAME)
-        mediatorView.addJavascriptInterface(PeerJavascriptInterface(), PeerJavascriptInterface.NAME)
-        mediatorView.loadUrl("file:///android_asset/mediator/mediator.html")
+        mediatorView.addConnectionInterface(mediatorInterface)
+        mediatorView.addConnectionInterface(PeerJavascriptInterface())
 
 
-
-        mediaSourceView.settings.javaScriptEnabled = true
-        mediaSourceView.settings.mediaPlaybackRequiresUserGesture = false
-        mediaSourceView.webChromeClient = object:WebChromeClient(){
-            override fun onConsoleMessage(message: String?, lineNumber: Int, sourceID: String?) {
-                Log.e("mediaSourceView",message.toString())
-
-            }
-
-            override fun onPermissionRequest(request: PermissionRequest?) {
-                request?.grant(request.resources)
-            }
-        }
-        mediaSourceView.addJavascriptInterface(mediatorInterface, MediaConnectionJavascriptInterface.NAME)
-        mediaSourceView.loadUrl("file:///android_asset/mediator/mediastream-source.html")
+        mediaSourceView.addConnectionInterface(mediatorInterface)
+        mediaReceivedView.addConnectionInterface(mediatorInterface)
 
         Executors.newSingleThreadExecutor().submit {
             TimeUnit.SECONDS.sleep(2)
             runOnUiThread {
-                mediaSourceView.evaluateJavascript("startStream(2, 1);", null)
+                mediaSourceView.loadElement(MediaSourceView.TYPE_VIDEO, MediaSourceView.BACK_CAM)
             }
 
             TimeUnit.SECONDS.sleep(5)
             runOnUiThread {
-                mediaSourceView.evaluateJavascript("createOffer()", null)
+                mediaSourceView.evaluateJavascript("createOffer()")
             }
         }
 
 
-        mediaReceivedView.settings.mediaPlaybackRequiresUserGesture = false
-        mediaReceivedView.settings.javaScriptEnabled = true
-        mediaReceivedView.webChromeClient = object:WebChromeClient(){
-            override fun onConsoleMessage(message: String?, lineNumber: Int, sourceID: String?) {
-                Log.e("mediaReceivedView",message.toString())
-
-            }
-
-
-        }
-        mediaReceivedView.addJavascriptInterface(mediatorInterface, MediaConnectionJavascriptInterface.NAME)
-        mediaReceivedView.loadUrl("file:///android_asset/mediator/mediastream-source.html")
 
 
     }
