@@ -47,8 +47,6 @@ class MediaStreamSource{
 				if (htmlElement) {
 					htmlElement.srcObject = stream
 				}
-
-				AndroidMediaConnection.onMediaStreamSourceMediaAvailable()
 				this.#initMediaStreamConnection(stream, htmlElement, false)
 				source.mediaStreamConn.createOffer()
 			})
@@ -184,7 +182,6 @@ function startStream(type, whichCam, audioConstraints, videoConstraints){
 			constraints.video = videoConstraints
 		}
 
-		console.log(JSON.stringify(constraints))
 		source.startStream(type, constraints)
 	})
 }
