@@ -2,6 +2,7 @@ package shim.shim.androidpeerrtc.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import shim.shim.androidpeerrtc.R
 import shim.shim.androidpeerrtc.javascriptinterface.MediaConnectionJavascriptInterface
 

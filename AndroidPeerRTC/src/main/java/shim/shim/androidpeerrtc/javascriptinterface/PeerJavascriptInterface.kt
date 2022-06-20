@@ -1,13 +1,19 @@
 package shim.shim.androidpeerrtc.javascriptinterface
 
-import android.util.Log
+import android.app.Activity
+import android.content.Context
 import android.webkit.JavascriptInterface
+import shim.shim.androidpeerrtc.peerrtc.AndroidPeerRTC
 
-class PeerJavascriptInterface : AndroidPeerInterface{
+class PeerJavascriptInterface(private val activity: Activity, private val peer: AndroidPeerRTC) : AndroidPeerInterface {
     override val name: String = "AndroidPeer"
 
+
     @JavascriptInterface
-    fun test(){
-        Log.e("ee", "Just test")
+    fun onCloseP2P() {
+        activity.runOnUiThread {
+            peer.onCloseP2P?.invoke()
+        }
+
     }
 }

@@ -1,9 +1,9 @@
+
 const peer = new PeerRTC()
 
 var sourceConn
 var receivedConn
 
-peer.pingServer(10000)
 
 peer.ontextmessage = m =>{
 	console.log(m)
@@ -37,8 +37,12 @@ peer.onnewtrack = (newTrack, trackStreams) =>{
 }
 
 
+peer.oncloseP2P = ()=>{
+	AndroidPeer.onCloseP2P()
+}
 
 
+peer.pingServer(10000)
 peer.start(true, p=>{
 	console.log("Connected to server")
 })
@@ -50,13 +54,14 @@ function sourceConnCreateAnswer(sdp){
 		existingConn.close()
 	}
 
+
 	sourceConn =  new MediaStreamConnection()
 	sourceConn.onnewtrack = (newTrack, trackStreams) => {
 		if (trackStreams) {
 			const stream = trackStreams[0]
 			if (stream) {
 				peer.addMediaStream(stream)
-				peer.connect("5b6bddbc-6538-4c68-9c6b-2135fbf0028d")
+				peer.connect("720c16f4-ea7c-434a-9b6e-6683b1cb16f0")
 			}
 				
 		}
