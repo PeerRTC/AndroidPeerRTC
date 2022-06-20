@@ -38,8 +38,6 @@ class MediaStreamSource{
 				mediaConstraints.audio = false
 			}
 
-			console.log(JSON.stringify(mediaConstraints))
-
 			promise = navigator.mediaDevices.getUserMedia(mediaConstraints)
 		}
 
