@@ -9,7 +9,7 @@ body,html{
 
 
 
-#video, #audio{
+#video{
   position: absolute;
    top: 0;
    bottom: 0;
