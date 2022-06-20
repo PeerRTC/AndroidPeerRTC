@@ -77,13 +77,17 @@ class MediaConnectionJavascriptInterface(
 
     @JavascriptInterface
     fun onMediaStreamSourceClosed() {
-        Log.e("aa", "Media source closed")
+        activity.runOnUiThread {
+            mediaSourceView?.onMediaNotAvailable?.invoke()
+        }
     }
 
 
     @JavascriptInterface
     fun onMediaStreamReceivedClosed() {
-        Log.e("aa", "Media received closed")
+        activity.runOnUiThread {
+            mediaReceivedView?.onMediaNotAvailable?.invoke()
+        }
     }
 
 

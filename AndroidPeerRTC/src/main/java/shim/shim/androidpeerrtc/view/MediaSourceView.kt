@@ -2,7 +2,6 @@ package shim.shim.androidpeerrtc.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import shim.shim.androidpeerrtc.R
 import shim.shim.androidpeerrtc.javascriptinterface.MediaConnectionJavascriptInterface
 
@@ -63,6 +62,7 @@ class MediaSourceView(context: Context, attr: AttributeSet?) :
     var videoConstraints: String? = null
 
     var onMediaAvailable: (() -> Unit)? = null
+    var onMediaNotAvailable: (() -> Unit)? = null
 
 
     init {

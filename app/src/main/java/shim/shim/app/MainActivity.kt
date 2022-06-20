@@ -62,11 +62,19 @@ class MainActivity : AppCompatActivity() {
             mediaSourceView.onMediaAvailable = {
                 it.start(true)
             }
+            mediaSourceView.onMediaNotAvailable = {
+                Log.e("aa", "Media source closed")
+            }
 
             mediaReceivedView.onMediaAvailable = {
 //                Log.e("Ee","available")
 //                mediaSourceView.enableVideo = false
             }
+
+            mediaReceivedView.onMediaNotAvailable = {
+                Log.e("aa", "Media received closed")
+            }
+
 
             it.setMediaSourcesView(mediaSourceView, mediaReceivedView)
 
