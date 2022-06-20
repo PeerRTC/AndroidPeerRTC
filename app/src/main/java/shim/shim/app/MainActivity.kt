@@ -2,6 +2,7 @@ package shim.shim.app
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -58,7 +59,13 @@ class MainActivity : AppCompatActivity() {
             val mediaSourceView = binding.mediaSourceView
             val mediaReceivedView = binding.mediaReceivedView
 
+            mediaSourceView.onMediaAvailable = {
+                mediaSourceView.enableVideo = false
+            }
+
             it.setMediaSourcesView(mediaSourceView, mediaReceivedView)
+
+
         }
 
     }

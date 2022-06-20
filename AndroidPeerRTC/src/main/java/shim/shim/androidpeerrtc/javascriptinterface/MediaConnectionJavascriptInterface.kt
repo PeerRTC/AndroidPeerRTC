@@ -3,7 +3,6 @@ package shim.shim.androidpeerrtc.javascriptinterface
 import android.app.Activity
 import android.util.Log
 import android.webkit.JavascriptInterface
-import android.webkit.WebView
 import shim.shim.androidpeerrtc.view.MediaSourceView
 import shim.shim.androidpeerrtc.view.MediatorView
 
@@ -86,4 +85,21 @@ class MediaConnectionJavascriptInterface(
     fun onMediaStreamReceivedClosed() {
         Log.e("aa", "Media received closed")
     }
+
+
+    @JavascriptInterface
+    fun onMediaStreamSourceMediaAvailable(){
+        activity.runOnUiThread {
+            mediaSourceView?.onMediaAvailable?.invoke()
+        }
+
+    }
+
+    @JavascriptInterface
+    fun onMediaStreamReceivedMediaAvailable(){
+        activity.runOnUiThread {
+            mediaReceivedView?.onMediaAvailable?.invoke()
+        }
+    }
+
 }

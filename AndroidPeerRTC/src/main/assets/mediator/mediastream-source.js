@@ -63,6 +63,7 @@ class MediaStreamSource{
 					htmlElement.srcObject = stream
 				}
 
+				AndroidMediaConnection.onMediaStreamSourceMediaAvailable()
 				this.#initMediaStreamConnection(stream, htmlElement, false)
 				source.mediaStreamConn.createOffer()
 			})
@@ -122,6 +123,9 @@ class MediaStreamSource{
 
 		mediaStreamConn.onnewtrack = (newTrack, trackStreams) => {
 			htmlElement.srcObject = trackStreams[0]
+			if (isReceivingSource) {
+				AndroidMediaConnection.onMediaStreamReceivedMediaAvailable()
+			}
 		}
 
 		mediaStreamConn.onConnectionEstablished = () => {
@@ -170,3 +174,34 @@ function saveAnswer(sdp){
 	source.mediaStreamConn.saveAnswer(sdp)
 }
 
+function muteAudio(mute){
+
+	const video = document.getElementById("video").srcObject
+	const audio =  document.getElementById("audio").srcObject
+	var audioTracks = []
+	if (video) {
+		audioTracks = audioTracks.concat(video.getAudioTracks())
+	}
+
+	if (audio) {
+		audioTracks = audioTracks.concat(audio.getAudioTracks())
+	}
+	
+
+	for(track of audioTracks){
+		track.enabled = !mute
+
+	}
+}
+
+function enableVideo(enable){
+	const video = document.getElementById("video").srcObject
+	var videoTracks = []
+	if (video) {
+		videoTracks = video.getVideoTracks()
+	}
+
+	for(track of videoTracks){
+		track.enabled = enable
+	}
+}
