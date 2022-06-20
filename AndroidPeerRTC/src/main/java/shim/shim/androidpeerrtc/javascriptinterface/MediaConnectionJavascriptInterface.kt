@@ -13,9 +13,10 @@ import shim.shim.androidpeerrtc.view.MediatorView
 class MediaConnectionJavascriptInterface(
     private val activity: Activity,
     private val mediatorView: MediatorView,
-    private val mediaSourceView: MediaSourceView?,
-    private val mediaReceivedView: MediaSourceView?
-) : AndroidPeerInterface{
+) : AndroidPeerInterface {
+    var mediaSourceView: MediaSourceView? = null
+    var mediaReceivedView: MediaSourceView? = null
+
     override val name: String = "AndroidMediaConnection"
 
     @JavascriptInterface
@@ -94,7 +95,7 @@ class MediaConnectionJavascriptInterface(
 
 
     @JavascriptInterface
-    fun onMediaStreamSourceMediaAvailable(){
+    fun onMediaStreamSourceMediaAvailable() {
         activity.runOnUiThread {
             mediaSourceView?.onMediaAvailable?.invoke()
         }
@@ -102,7 +103,7 @@ class MediaConnectionJavascriptInterface(
     }
 
     @JavascriptInterface
-    fun onMediaStreamReceivedMediaAvailable(){
+    fun onMediaStreamReceivedMediaAvailable() {
         activity.runOnUiThread {
             mediaReceivedView?.onMediaAvailable?.invoke()
         }

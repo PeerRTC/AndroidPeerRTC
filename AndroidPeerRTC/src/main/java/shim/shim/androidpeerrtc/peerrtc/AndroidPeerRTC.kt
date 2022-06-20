@@ -8,17 +8,29 @@ import shim.shim.androidpeerrtc.view.MediaSourceView
 import shim.shim.androidpeerrtc.view.MediatorView
 
 class AndroidPeerRTC(
-    private val context: Context,
+    context: Context,
+    private val serverURL: String?,
+    private val configuration: String?,
     private val onReady: (peer: AndroidPeerRTC) -> Unit
 ) {
     private val mediatorView = MediatorView(context, null)
+    private val connectionInterface = MediaConnectionJavascriptInterface(
+        context as Activity,
+        mediatorView
+    )
 
-    var onCloseP2P: (() -> Unit)? = null
     var onStart: (() -> Unit)? = null
+    var onCloseP2P: (() -> Unit)? = null
+
 
     init {
+
+        mediatorView.addConnectionInterface(connectionInterface)
+        mediatorView.addConnectionInterface(PeerJavascriptInterface(context as Activity, this))
         mediatorView.loadView {
-            mediatorView.addConnectionInterface(PeerJavascriptInterface(context as Activity, this))
+            val url = if (serverURL == null) "null" else "'$serverURL'"
+            val config = if (configuration == null) "null" else "'$configuration'"
+            mediatorView.evaluateJavascript("initPeer($url, $config)")
             onReady(this)
         }
     }
@@ -26,23 +38,19 @@ class AndroidPeerRTC(
     fun setMediaSourcesView(
         clientSourceView: MediaSourceView?,
         receivedSourceView: MediaSourceView?
-    ) {
-        val connectionInterface = MediaConnectionJavascriptInterface(
-            context as Activity,
-            mediatorView,
-            clientSourceView,
-            receivedSourceView
-        )
+    ) { 
+        connectionInterface.mediaSourceView = clientSourceView
+        connectionInterface.mediaReceivedView = receivedSourceView
+
         clientSourceView?.addConnectionInterface(connectionInterface)
         receivedSourceView?.addConnectionInterface(connectionInterface)
-        mediatorView.addConnectionInterface(connectionInterface)
+
 
         clientSourceView?.loadView {
             clientSourceView.loadElement()
         }
 
         receivedSourceView?.loadView(null)
-
 
     }
 

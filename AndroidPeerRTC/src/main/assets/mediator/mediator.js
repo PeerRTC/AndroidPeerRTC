@@ -1,48 +1,50 @@
-const peer = new PeerRTC()
-
 var sourceConn
 var receivedConn
+var peer
 
 
-peer.ontextmessage = m =>{
-	console.log(m)
-}
-peer.onnewtrack = (newTrack, trackStreams) =>{
+function initPeer(serverURL, configuration){
+	peer = new PeerRTC(serverURL, configuration)
+	peer.pingServer(10000)
 
-	if (trackStreams) {
-		const stream = trackStreams[0]
-		if (stream) {
-			const existingConn = receivedConn
-			if (existingConn) {
-				existingConn.close()
+	peer.oncloseP2P = ()=>{
+		AndroidPeer.onCloseP2P()
+	}
+
+
+	peer.ontextmessage = m =>{
+		console.log(m)
+	}
+
+	peer.onnewtrack = (newTrack, trackStreams) =>{
+
+		if (trackStreams) {
+			const stream = trackStreams[0]
+			if (stream) {
+				const existingConn = receivedConn
+				if (existingConn) {
+					existingConn.close()
+				}
+
+				receivedConn = new MediaStreamConnection(stream)
+				receivedConn.onConnectionEstablished = () => {
+					AndroidMediaConnection.onMediaStreamReceivedInitialized()
+				}
+				receivedConn.onicecandididate = sdp => {
+					AndroidMediaConnection.onMediatorOfferSDP(JSON.stringify(sdp))
+				}
+				receivedConn.oncloseP2P = ()=>{
+					AndroidMediaConnection.onMediaStreamReceivedClosed()
+				}
+
+				receivedConn.start()
+
+				AndroidMediaConnection.initReceiveMediaStreamSource()
 			}
-
-			receivedConn = new MediaStreamConnection(stream)
-			receivedConn.onConnectionEstablished = () => {
-				AndroidMediaConnection.onMediaStreamReceivedInitialized()
-			}
-			receivedConn.onicecandididate = sdp => {
-				AndroidMediaConnection.onMediatorOfferSDP(JSON.stringify(sdp))
-			}
-			receivedConn.oncloseP2P = ()=>{
-				AndroidMediaConnection.onMediaStreamReceivedClosed()
-			}
-
-			receivedConn.start()
-
-			AndroidMediaConnection.initReceiveMediaStreamSource()
 		}
 	}
+
 }
-
-
-peer.oncloseP2P = ()=>{
-	AndroidPeer.onCloseP2P()
-}
-
-
-peer.pingServer(10000)
-
 
 
 

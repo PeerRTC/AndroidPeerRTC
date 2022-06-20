@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import shim.shim.androidpeerrtc.peerrtc.AndroidPeerRTC
 import shim.shim.app.databinding.ActivityMainBinding
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -55,7 +56,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun run() {
-        val peer = AndroidPeerRTC(this) {
+        val peer = AndroidPeerRTC(context = this, serverURL = null, configuration = null) {
+            TimeUnit.SECONDS.sleep(2)
             val mediaSourceView = binding.mediaSourceView
             val mediaReceivedView = binding.mediaReceivedView
 
@@ -82,11 +84,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         peer.onCloseP2P = {
-            peer.connect("8461cdca-34e9-4708-9b12-dc7d515cdd7a")
+            peer.connect("95054804-cd0f-43f5-a6df-37bcbdcbb52e")
         }
 
         peer.onStart = {
-            peer.connect("8461cdca-34e9-4708-9b12-dc7d515cdd7a")
+            peer.connect("95054804-cd0f-43f5-a6df-37bcbdcbb52e")
         }
 
     }
