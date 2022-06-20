@@ -34,9 +34,11 @@ class MediaStreamSource{
 			}
 
 			
-			if (!hasAudio) {} {
+			if (!hasAudio) {
 				mediaConstraints.audio = false
 			}
+
+			console.log(JSON.stringify(mediaConstraints))
 
 			promise = navigator.mediaDevices.getUserMedia(mediaConstraints)
 		}
@@ -152,6 +154,7 @@ function startStream(type, whichCam, audioConstraints, videoConstraints){
 			audioDeviceId = devices.audio[0]
 		}catch(e){
 
+
 		}
 
 		const constraints = {
@@ -181,6 +184,7 @@ function startStream(type, whichCam, audioConstraints, videoConstraints){
 			videoConstraints.deviceId = videoDeviceId
 			constraints.video = videoConstraints
 		}
+
 
 		source.startStream(type, constraints)
 	})
