@@ -2,7 +2,6 @@ class MediaStreamSource{
 	static TYPE_AUDIO = 1
 	static TYPE_VIDEO = 2
 	static TYPE_AUDIO_VIDEO =3
-	static TYPE_SCREEN = 4
 
 	constructor(){
 		this.mediaStreamConn = null
@@ -13,9 +12,7 @@ class MediaStreamSource{
 		const htmlElement = this.#getHtmlElement(type)
 		var promise = null
 
-		if (type == MediaStreamSource.TYPE_SCREEN) {
-			promise = navigator.mediaDevices.getDisplayMedia()
-		} else if([MediaStreamSource.TYPE_AUDIO, MediaStreamSource.TYPE_VIDEO, MediaStreamSource.TYPE_AUDIO_VIDEO].includes(type)) {
+		if([MediaStreamSource.TYPE_AUDIO, MediaStreamSource.TYPE_VIDEO, MediaStreamSource.TYPE_AUDIO_VIDEO].includes(type)) {
 			const video = {
 				deviceId: videoDeviceID,
 				frameRate: {
