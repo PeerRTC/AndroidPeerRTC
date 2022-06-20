@@ -16,4 +16,12 @@ class PeerJavascriptInterface(private val activity: Activity, private val peer: 
         }
 
     }
+
+
+    @JavascriptInterface
+    fun onStart(){
+        activity.runOnUiThread {
+            peer.onStart?.invoke()
+        }
+    }
 }

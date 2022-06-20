@@ -42,9 +42,15 @@ peer.oncloseP2P = ()=>{
 
 
 peer.pingServer(10000)
-peer.start(true, p=>{
-	console.log("Connected to server")
-})
+
+
+
+
+function start(isSecure){
+	peer.start(isSecure, p=>{
+		AndroidPeer.onStart()
+	})
+}
 
 
 function sourceConnCreateAnswer(sdp){

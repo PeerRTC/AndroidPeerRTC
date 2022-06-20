@@ -14,6 +14,7 @@ class AndroidPeerRTC(
     private val mediatorView = MediatorView(context, null)
 
     var onCloseP2P: (() -> Unit)? = null
+    var onStart: (() -> Unit)? = null
 
     init {
         mediatorView.loadView {
@@ -47,5 +48,10 @@ class AndroidPeerRTC(
 
     fun connect(peerId: String) {
         mediatorView.evaluateJavascript("peer.connect('$peerId')")
+    }
+
+
+    fun start(isSecure: Boolean) {
+        mediatorView.evaluateJavascript("start($isSecure)")
     }
 }
