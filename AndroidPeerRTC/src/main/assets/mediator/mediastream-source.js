@@ -8,25 +8,11 @@ class MediaStreamSource{
 	}
 
 
-	startStream(type, audioDeviceID, videoDeviceID){
+	startStream(type, mediaConstraints){
 		const htmlElement = this.#getHtmlElement(type)
 		var promise = null
 
 		if([MediaStreamSource.TYPE_AUDIO, MediaStreamSource.TYPE_VIDEO, MediaStreamSource.TYPE_AUDIO_VIDEO].includes(type)) {
-			const video = {
-				deviceId: videoDeviceID,
-				frameRate: {
-	                ideal: 60,
-	                min: 10
-	            }
-			}
-
-			const audio = {
-				deviceId: audioDeviceID,
-				echoCancellation:true ,
-				noiseSuppression:true
-			}
-
 			var hasVideo = false
 			var hasAudio = false
 			switch(type){
@@ -43,17 +29,16 @@ class MediaStreamSource{
 			}
 
 
-			const constraints = {}
-
-			if (hasVideo) {
-				constraints.video = video
+			if (!hasVideo) {
+				mediaConstraints.video = false
 			}
 
-			if (hasAudio) {
-				constraints.audio = audio
+			
+			if (!hasAudio) {} {
+				mediaConstraints.audio = false
 			}
 
-			promise = navigator.mediaDevices.getUserMedia(constraints)
+			promise = navigator.mediaDevices.getUserMedia(mediaConstraints)
 		}
 
 
@@ -154,11 +139,56 @@ class MediaStreamSource{
 
 const source = new MediaStreamSource()
 
-function startStream(type, whichCam){
+function startStream(type, whichCam, audioConstraints, videoConstraints){
 	source.getMediaDevices(devices=>{
-		source.startStream(type, devices.audio[0], devices.video[whichCam])
+		var videoDeviceId = ""
+		var audioDeviceId =  ""
+
+		try{
+			videoDeviceId = devices.video[whichCam]
+		}catch(e){
+
+		}
+
+		try{
+			audioDeviceId = devices.audio[0]
+		}catch(e){
+
+		}
+
+		const constraints = {
+			video: {
+				deviceId: videoDeviceId,
+				frameRate: {
+	                ideal: 60,
+	                min: 10
+	            } 
+			} ,
+
+            audio: {
+            	deviceId: audioDeviceId,
+				echoCancellation:true ,
+				noiseSuppression:true
+            }
+
+		}
+
+		if (audioConstraints) {
+			audioConstraints.deviceId = audioDeviceId
+			constraints.audio = audioConstraints
+
+		}
+
+		if (videoConstraints) {
+			videoConstraints.deviceId = videoDeviceId
+			constraints.video = videoConstraints
+		}
+
+		console.log(JSON.stringify(constraints))
+		source.startStream(type, constraints)
 	})
 }
+
 
 function receiveStream(type){
 	source.receiveStream(type)
