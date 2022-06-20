@@ -2,9 +2,33 @@ package shim.shim.androidpeerrtc.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import shim.shim.androidpeerrtc.R
 import shim.shim.androidpeerrtc.javascriptinterface.MediaConnectionJavascriptInterface
+
+/**
+ * @property audioConstraints
+ *
+ * Json string of settings to be used to configure the audio. Device Id constraint should not by included
+ * here since it is ignored. The constraints provided are passed down to
+ * the navigator.mediaDevices.getUserMedia method in the internal WebView. It should also be remembered that
+ * some constraints will not be available depending on the supported constraints returned by
+ * navigator.mediaDevices.getSupportedConstraints method. For more detailed documentation
+ * of the possible audio constraints, refer to the Audio MediaTrackConstraints Documentation.
+ *
+ * @see <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints#properties_of_audio_tracks">Audio MediaTrackConstraints Documentation</a>
+ *
+ *
+ * @property videoConstraints
+ *
+ * Json string of settings to be used to configure the video. Device Id constraint should not by included
+ * here since it is ignored. The constraints provided are passed down to
+ * the navigator.mediaDevices.getUserMedia method in the internal WebView. It should also be remembered that
+ * some constraints will not be available depending on the supported constraints returned by
+ * navigator.mediaDevices.getSupportedConstraints method. For more detailed documentation
+ * of the possible video constraints, refer to the Video MediaTrackConstraints Documentation.
+ *
+ * @see <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints#properties_of_video_tracks">Video MediaTrackConstraints documentation </a>
+ */
 
 class MediaSourceView(context: Context, attr: AttributeSet?) :
     AndroidPeerInterfaceView(context, attr) {
@@ -29,13 +53,15 @@ class MediaSourceView(context: Context, attr: AttributeSet?) :
         }
 
     var enableVideo = true
-    set(value) {
-        field = value
-        webView.evaluateJavascript("enableVideo($value)", null)
-    }
+        set(value) {
+            field = value
+            webView.evaluateJavascript("enableVideo($value)", null)
+        }
 
-    var onMediaAvailable:(()->Unit)? = null
+    var audioConstraints: String? = null
+    var videoConstraints: String? = null
 
+    var onMediaAvailable: (() -> Unit)? = null
 
 
     init {
@@ -48,7 +74,10 @@ class MediaSourceView(context: Context, attr: AttributeSet?) :
 
 
     fun loadElement() {
-        webView.evaluateJavascript("startStream($mediaType, $cameraType)", null)
+        webView.evaluateJavascript(
+            "startStream($mediaType, $cameraType, $audioConstraints, $videoConstraints)",
+            null
+        )
     }
 
     fun addConnectionInterface(connectionInterface: MediaConnectionJavascriptInterface) {
