@@ -1,13 +1,12 @@
 package shim.shim.androidpeerrtc.view
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
 import android.webkit.*
 import android.widget.LinearLayout
-import shim.shim.androidpeerrtc.javascriptinterface.OnFinishLoadingJavascriptInterface
 
 @SuppressLint("SetJavaScriptEnabled")
 abstract class AndroidPeerInterfaceView(context: Context, attr: AttributeSet?) :
@@ -19,25 +18,17 @@ abstract class AndroidPeerInterfaceView(context: Context, attr: AttributeSet?) :
     private var onPageLoaded: (() -> Unit)? = null
 
     init {
-//        val onFinishLoadingInterface = object : OnFinishLoadingJavascriptInterface() {
-//            @JavascriptInterface
-//            override fun onFinishLoading() {
-//                (context as Activity).runOnUiThread {
-//
-//                }
-//
-//            }
-//
-//        }
 
         webView.also {
             it.layoutParams = LayoutParams(
                 LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT
             )
+            it.setBackgroundColor(Color.BLACK)
 
-            it.settings.javaScriptEnabled = true
-            it.settings.mediaPlaybackRequiresUserGesture = false
+            val settings =  it.settings
+            settings.javaScriptEnabled = true
+            settings.mediaPlaybackRequiresUserGesture = false
 
             it.webChromeClient = object : WebChromeClient() {
                 override fun onConsoleMessage(

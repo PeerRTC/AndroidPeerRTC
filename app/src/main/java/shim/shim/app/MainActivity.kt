@@ -60,12 +60,21 @@ class MainActivity : AppCompatActivity() {
             val mediaReceivedView = binding.mediaReceivedView
 
             mediaSourceView.onMediaAvailable = {
-                mediaSourceView.enableVideo = false
+                it.connect("8461cdca-34e9-4708-9b12-dc7d515cdd7a")
+            }
+
+            mediaReceivedView.onMediaAvailable = {
+//                Log.e("Ee","available")
+//                mediaSourceView.enableVideo = false
             }
 
             it.setMediaSourcesView(mediaSourceView, mediaReceivedView)
 
 
+        }
+
+        peer.onCloseP2P = {
+            peer.connect("8461cdca-34e9-4708-9b12-dc7d515cdd7a")
         }
 
     }
