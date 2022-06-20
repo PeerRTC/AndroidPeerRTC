@@ -67,11 +67,13 @@ class MediaConnectionJavascriptInterface(
 
     @JavascriptInterface
     fun onMediaStreamSourceInitialized() {
+        // when media stream source successfully connected to mediator
         Log.e("ee", "Media Stream source is running")
     }
 
     @JavascriptInterface
     fun onMediaStreamReceivedInitialized() {
+        // when media stream received successfully connected to mediator
         Log.e("ee", "Media Stream received is running")
     }
 
