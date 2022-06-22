@@ -1,7 +1,6 @@
 package shim.shim.androidpeerrtc.javascriptinterface
 
 import android.app.Activity
-import android.util.Log
 import android.webkit.JavascriptInterface
 import org.json.JSONArray
 import shim.shim.androidpeerrtc.peerrtc.AndroidPeerRTC
@@ -159,18 +158,25 @@ class PeerJavascriptInterface(
 
 
     @JavascriptInterface
-    fun onServerError(errorMessage:String){
+    fun onServerError(errorMessage: String) {
         activity.runOnUiThread {
             peer.onServerError?.invoke(errorMessage)
         }
     }
 
     @JavascriptInterface
-    fun onStart(id:String) {
+    fun onStart(id: String) {
         activity.runOnUiThread {
             peer.id = id
             peer.isConnectedToServer = true
             peer.onStart?.invoke()
+        }
+    }
+
+    @JavascriptInterface
+    fun onServerPing() {
+        activity.runOnUiThread {
+            peer.onServerPing?.invoke()
         }
     }
 
@@ -184,6 +190,6 @@ class PeerJavascriptInterface(
         return arrayString.replace(Regex("\\s+"), "")
             .split(",")
             .filter { it.matches(Regex("\\d+")) }
-            .map {(it.toUInt().toByte())}.toByteArray()
+            .map { (it.toUInt().toByte()) }.toByteArray()
     }
 }

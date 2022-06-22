@@ -8,8 +8,6 @@ const connectionRequests = new Map()
 
 function initPeer(serverURL, configuration){
 	peer = new PeerRTC(serverURL, configuration)
-	peer.pingServer(10000)
-
 
 	peer.ontextmessage = message=>{
 		AndroidPeer.onTextMessage(message)
@@ -192,6 +190,13 @@ function acceptDeclineConnectRequest(requestId, accept){
 	}
 }
 
+
+
+function pingServer(everyMillis){
+	peer.pingServer(everyMillis, ()=>{
+		AndroidPeer.onServerPing()
+	})
+}
 
 
 

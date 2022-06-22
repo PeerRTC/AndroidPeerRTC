@@ -22,7 +22,7 @@ class AndroidPeerRTC(
 
     var isConnectedToServer = false
     var id: String? = null
-    var peerId:String? = null
+    var peerId: String? = null
 
     var onStart: (() -> Unit)? = null
     var onTextMessage: ((message: String) -> Unit)? = null
@@ -50,6 +50,8 @@ class AndroidPeerRTC(
     var onAdminGetAllClientsData: ((clientsData: JSONArray) -> Unit)? = null
     var onAdminActionDecline: (() -> Unit)? = null
     var onServerError: ((errorMessage: String) -> Unit)? = null
+
+    var onServerPing: (() -> Unit)? = null
 
     init {
 
@@ -88,6 +90,7 @@ class AndroidPeerRTC(
 
     }
 
+
     fun connect(peerId: String) {
         mediatorView.evaluateJavascript("peer.connect('$peerId')")
     }
@@ -95,5 +98,9 @@ class AndroidPeerRTC(
 
     fun start(isSecure: Boolean) {
         mediatorView.evaluateJavascript("start($isSecure)")
+    }
+
+    fun pingServer(millis: Long) {
+        mediatorView.evaluateJavascript("pingServer($millis)")
     }
 }
