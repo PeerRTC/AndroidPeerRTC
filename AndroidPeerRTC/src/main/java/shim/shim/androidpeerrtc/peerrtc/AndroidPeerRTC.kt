@@ -2,6 +2,7 @@ package shim.shim.androidpeerrtc.peerrtc
 
 import android.app.Activity
 import android.content.Context
+import org.json.JSONArray
 import shim.shim.androidpeerrtc.javascriptinterface.MediaConnectionJavascriptInterface
 import shim.shim.androidpeerrtc.javascriptinterface.PeerJavascriptInterface
 import shim.shim.androidpeerrtc.view.MediaSourceView
@@ -20,13 +21,42 @@ class AndroidPeerRTC(
     )
 
     var onStart: (() -> Unit)? = null
+    var onTextMessage: ((message: String) -> Unit)? = null
+    var onSendFileMessage: ((fileBytesArray: ByteArray, fileSizeSent: Int) -> Unit)? = null
+    var onFileMessage: ((
+        fileName: String,
+        fileTotalSize: String,
+        fileBytesArray: ByteArray,
+        done: Boolean
+    ) -> Unit)? = null
     var onCloseP2P: (() -> Unit)? = null
-
+    var onClose: (() -> Unit)? = null
+    var onNewPayload: ((payload: String) -> Unit)? = null
+    var onNewPrivatePayload: ((payload: String) -> Unit)? = null
+    var onPeerPayloads: ((payloads: JSONArray) -> Unit)? = null
+    var onPeerIds: ((ids: JSONArray) -> Unit)? = null
+    var onPeerConnectRequest: ((
+        peerId: String,
+        accept: () -> Unit,
+        decline: () -> Unit
+    ) -> Unit)? = null
+    var onPeerConnectionDecline: ((peerId: String) -> Unit)? = null
+    var onPeerConnectSuccess: ((peerId: String) -> Unit)? = null
+    var onAdminBroadcastData: ((data: String) -> Unit)? = null
+    var onAdminGetAllClientsData: ((clientsData: JSONArray) -> Unit)? = null
+    var onAdminActionDecline: (() -> Unit)? = null
+    var onServerError: ((errorMessage: String) -> Unit)? = null
 
     init {
 
         mediatorView.addConnectionInterface(connectionInterface)
-        mediatorView.addConnectionInterface(PeerJavascriptInterface(context as Activity, this))
+        mediatorView.addConnectionInterface(
+            PeerJavascriptInterface(
+                activity = context as Activity,
+                peer = this,
+                mediatorView = mediatorView
+            )
+        )
         mediatorView.loadView {
             val url = if (serverURL == null) "null" else "'$serverURL'"
             val config = if (configuration == null) "null" else "'$configuration'"
@@ -38,7 +68,7 @@ class AndroidPeerRTC(
     fun setMediaSourcesView(
         clientSourceView: MediaSourceView?,
         receivedSourceView: MediaSourceView?
-    ) { 
+    ) {
         connectionInterface.mediaSourceView = clientSourceView
         connectionInterface.mediaReceivedView = receivedSourceView
 

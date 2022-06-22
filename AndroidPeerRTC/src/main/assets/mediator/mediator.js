@@ -2,6 +2,8 @@ var sourceConn
 var receivedConn
 var peer
 
+// stores the connections request via id
+const connectionRequests = new Map()
 
 
 function initPeer(serverURL, configuration){
@@ -10,18 +12,27 @@ function initPeer(serverURL, configuration){
 
 
 	peer.ontextmessage = message=>{
-	
+		AndroidPeer.onTextMessage(message)
 	}
 
 
 
 	peer.onsendfilemessage = (file, fileSizeSent)=>{
-		
+		const reader = new FileReader()
+		reader.onload = event => {
+			const buffer = new Uint8Array(event.target.result)
+			const bytes = []
+		    for(byte of buffer){
+		        bytes.push(byte)
+		    }
+			AndroidPeer.onSendFileMessage(bytes.toString(), fileSizeSent)
+		}
+		reader.readArrayAsBuffer(file)
 	}
 
 
 	peer.onfilemessage = (fname, fileTotalSize, fileBytesArray, done)=>{
-		
+		AndroidPeer.onFileMessage(fname, fileTotalSize, fileBytesArray, done)
 	}
 
 	peer.oncloseP2P = ()=>{
@@ -30,34 +41,41 @@ function initPeer(serverURL, configuration){
 
 
 	peer.onclose = ()=>{
-		
+		AndroidPeer.onClose()
 	}
 
 	peer.onnewpayload = payload=>{
-		
+		AndroidPeer.onNewPayload(JSON.stringify(payload))
 	}
 
 
 	peer.onnewprivatepayload = payload =>{
-		
+		AndroidPeer.onNewPrivatePayload(JSON.stringify(payload))
 	}
 
 	peer.onpeerpayloads = payloads=>{
-		
+		const stringPayloads = []
+		for(const payload of payloads){
+			stringPayloads.push(JSON.stringify(payload))
+		}
+		Android.onPeerPayloads(JSON.stringify(stringPayloads))
 	}
 
 	peer.onpeerids = (ids) => {
+		AndroidPeer.onPeerIds(JSON.stringify(ids))
 		
 	}
 
 
 	peer.onpeerconnectrequest = (peerId, accept, decline)=>{
-		
+		const requestId = Date.now().toString()
+		connectionRequests.set(requestId, [accept, decline])
+		AndroidPeer.onPeerConnectRequest(peerId, requestId)
 
 	}
 
 	peer.onpeerconnectdecline = peerId => {
-		
+		AndroidPeer.onPeerConnectionDecline(peerId)
 	}
 
 	peer.onnewtrack = (newTrack, trackStreams) => {
@@ -89,24 +107,28 @@ function initPeer(serverURL, configuration){
 
 
 	peer.onpeerconnectsuccess = peerId =>{
-		
+		AndroidPeer.onPeerConnectSuccess(peerId)
 	}
 
 
 	peer.onadminbroadcastdata = data =>{
-		
+		var finalData = data
+		if (typeof finalData != "string") {
+			finalData = JSON.stringify(data)
+		}
+		AndroidPeer.onAdminBroadcastData(finalData)
 	}
 
 	peer.onadmingetallclientsdata = clientsData =>{
-		
+		AndroidPeer.onAdminGetAllClientsData(JSON.stringify(clientsData))
 	}
 
 	peer.onadminactiondecline = ()=> {
-		
+		AndroidPeer.onAdminActionDecline()
 	}
 
 	peer.onservererror = event =>{
-		
+		AndroidPeer.onServerError(event.message)
 	}
 
 }
@@ -155,6 +177,19 @@ function sourceConnCreateAnswer(sdp){
 
 	sourceConn.start()
 	sourceConn.createAnswer(sdp)
+}
+
+
+function acceptDeclineConnectRequest(requestId, accept){
+	const request = connectionRequests.get(requestId)
+	if (request) {
+		if (isAccept) {
+			request[0]()
+		} else{
+			request[1]()
+		}
+		connectionRequests.delete(requestId)
+	}
 }
 
 
