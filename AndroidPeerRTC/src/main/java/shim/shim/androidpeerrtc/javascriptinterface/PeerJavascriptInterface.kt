@@ -190,6 +190,6 @@ class PeerJavascriptInterface(
         return arrayString.replace(Regex("\\s+"), "")
             .split(",")
             .filter { it.matches(Regex("\\d+")) }
-            .map { (it.toUInt().toByte()) }.toByteArray()
+            .map { (it.toInt().toByte()) }.toByteArray()
     }
 }

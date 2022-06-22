@@ -25,7 +25,7 @@ function initPeer(serverURL, configuration){
 		    }
 			AndroidPeer.onSendFileMessage(bytes.toString(), fileSizeSent)
 		}
-		reader.readArrayAsBuffer(file)
+		reader.readAsArrayBuffer(file)
 	}
 
 
@@ -209,8 +209,9 @@ function sendText(text){
 
 
 function sendFile(fname, fileBytesArrayString, chunkSize) {
-	const file = new File( JSON.parse(fileBytesArrayString))
-	peer.sendFile(fname, sendFile, chunkSize)
+	const buffer= new Uint8Array(JSON.parse(fileBytesArrayString))
+	const file = new File([buffer], 0)
+	peer.sendFile(fname, file, chunkSize)
 }
 
 function addPayload(jsonString){

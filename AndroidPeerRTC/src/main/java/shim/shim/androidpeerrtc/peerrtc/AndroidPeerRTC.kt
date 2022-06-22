@@ -106,7 +106,11 @@ class AndroidPeerRTC(
 
 
     fun sendFile(fileName: String, fileBytesArray: ByteArray, chunkSize: Int = 1024) {
-        val fileBytesArrayString = fileBytesArray.toMutableList().toString()
+        val unsignedBytes = mutableListOf<Int>()
+        for (byte in fileBytesArray){
+            unsignedBytes.add(byte.toUByte().toInt())
+        }
+        val fileBytesArrayString =unsignedBytes.toString()
         mediatorView.evaluateJavascript("sendFile('$fileName', '$fileBytesArrayString', $chunkSize)")
 
     }
