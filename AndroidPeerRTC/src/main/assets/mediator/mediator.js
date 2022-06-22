@@ -67,7 +67,7 @@ function sourceConnCreateAnswer(sdp){
 		if (trackStreams) {
 			const stream = trackStreams[0]
 			if (stream) {
-				peer.addMediaStream(stream)
+				peer.setMediaStream(stream)
 				AndroidMediaConnection.onMediaStreamSourceMediaAvailable()
 			}
 				
