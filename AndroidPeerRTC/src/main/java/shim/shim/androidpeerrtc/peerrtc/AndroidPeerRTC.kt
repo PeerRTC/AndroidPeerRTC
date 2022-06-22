@@ -124,11 +124,11 @@ class AndroidPeerRTC(
     }
 
     fun addPayload(jsonString: String) {
-        mediatorView.evaluateJavascript("addPayload('$jsonString')")
+        mediatorView.evaluateJavascript("addPayload($jsonString)")
     }
 
     fun addPrivatePayload(jsonString: String) {
-        mediatorView.evaluateJavascript("addPrivatePayload('$jsonString')")
+        mediatorView.evaluateJavascript("addPrivatePayload($jsonString)")
     }
 
 
