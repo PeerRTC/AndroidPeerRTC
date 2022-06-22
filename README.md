@@ -51,6 +51,6 @@ peer.onStart = {p:AndroidPeerRTC->
 ```
 
 ## 📚 Api Reference
-There are no documentations api reference and documentations yet. Feel free to contribute 😉.
+There are no api reference and documentations yet. Feel free to contribute 😉.
 
 
