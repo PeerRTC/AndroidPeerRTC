@@ -5,6 +5,7 @@ class MediaStreamSource{
 
 	constructor(){
 		this.mediaStreamConn = null
+		this.allowNullStreamElements = false
 	}
 
 
@@ -48,6 +49,7 @@ class MediaStreamSource{
 					htmlElement.srcObject = stream
 				}
 				this.#initMediaStreamConnection(stream, htmlElement, false)
+				this.allowNullStreamElements = false
 				source.mediaStreamConn.createOffer()
 			})
 		}
@@ -112,7 +114,7 @@ class MediaStreamSource{
 		}
 
 		mediaStreamConn.onConnectionEstablished = () => {
-			console.log("New media stream connected")
+			this.allowNullStreamElements = true
 		}
 
 		mediaStreamConn.onicecandididate = (sdp) => {
@@ -127,8 +129,11 @@ class MediaStreamSource{
 		}
 
 		mediaStreamConn.oncloseP2P = ()=>{
-			document.getElementById("video").srcObject = null
-			document.getElementById("audio").srcObject = null
+			if (this.allowNullStreamElements) {
+				document.getElementById("video").srcObject = null
+				document.getElementById("audio").srcObject = null
+			}
+			
 		}
 
 
