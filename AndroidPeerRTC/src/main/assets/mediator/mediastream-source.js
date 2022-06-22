@@ -126,6 +126,11 @@ class MediaStreamSource{
 		
 		}
 
+		mediaStreamConn.oncloseP2P = ()=>{
+			document.getElementById("video").srcObject = null
+			document.getElementById("audio").srcObject = null
+		}
+
 
 		
 		mediaStreamConn.start()

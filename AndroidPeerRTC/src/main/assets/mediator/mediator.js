@@ -34,6 +34,9 @@ function initPeer(serverURL, configuration){
 	}
 
 	peer.oncloseP2P = ()=>{
+		if (receivedConn) {
+			receivedConn.close()
+		}
 		AndroidPeer.onCloseP2P()
 	}
 
