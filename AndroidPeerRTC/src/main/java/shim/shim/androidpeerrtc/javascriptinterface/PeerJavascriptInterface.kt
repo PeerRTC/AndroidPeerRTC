@@ -24,8 +24,8 @@ class PeerJavascriptInterface(
 
     @JavascriptInterface
     fun onSendFileMessage(fileArrayStrings: String, fileSizeSent: Int) {
+        val fileBytesArray = fileArrayStringsToByteArray(arrayString = fileArrayStrings)
         activity.runOnUiThread {
-            val fileBytesArray = fileArrayStringsToByteArray(arrayString = fileArrayStrings)
             peer.onSendFileMessage?.invoke(fileBytesArray, fileSizeSent)
         }
 
@@ -40,8 +40,8 @@ class PeerJavascriptInterface(
         fileArrayStrings: String,
         done: Boolean
     ) {
+        val fileBytesArray = fileArrayStringsToByteArray(arrayString = fileArrayStrings)
         activity.runOnUiThread {
-            val fileBytesArray = fileArrayStringsToByteArray(arrayString = fileArrayStrings)
             peer.onFileMessage?.invoke(fileName, fileTotalSize, fileBytesArray, done)
         }
 
@@ -189,7 +189,6 @@ class PeerJavascriptInterface(
     private fun fileArrayStringsToByteArray(arrayString: String): ByteArray {
         return arrayString.replace(Regex("\\s+"), "")
             .split(",")
-            .filter { it.matches(Regex("\\d+")) }
             .map { (it.toInt().toByte()) }.toByteArray()
     }
 }
