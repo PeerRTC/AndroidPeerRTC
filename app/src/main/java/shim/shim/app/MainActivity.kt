@@ -1,6 +1,7 @@
 package shim.shim.app
 
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -76,19 +77,56 @@ class MainActivity : AppCompatActivity() {
             mediaReceivedView.onMediaNotAvailable = {
                 Log.e("aa", "Media received closed")
             }
-
-
             it.setMediaSourcesView(mediaSourceView, mediaReceivedView)
-
-
         }
 
+        var byteArray:ByteArray? = null
+        var offset = 0
+
+        peer.onFileMessage = { fileName: String,
+                               fileTotalSize: Int,
+                               fileBytesArray: ByteArray,
+                               done: Boolean ->
+            if (byteArray == null){
+                byteArray = ByteArray(fileTotalSize)
+            }
+
+            for (byte:Byte in fileBytesArray){
+                byteArray?.set(offset,byte)
+                offset++
+            }
+
+            if (done){
+                peer.sendFile(fileName=fileName, byteArray!!)
+                val bitmap = BitmapFactory.decodeByteArray(byteArray!!,0, byteArray!!.size)
+                binding.testImageView.setImageBitmap(bitmap)
+            }
+
+        }
+        peer.onPeerConnectSuccess = {
+            Log.e("connected", it)
+        }
         peer.onCloseP2P = {
-            peer.connect("95054804-cd0f-43f5-a6df-37bcbdcbb52e")
+            peer.connect("74e330f2-37de-482c-92cc-f726e7c09fb5")
         }
 
         peer.onStart = {
-            peer.connect("95054804-cd0f-43f5-a6df-37bcbdcbb52e")
+            peer.pingServer(10000)
+
+            peer.adminBroadcastData("","aaaaaaaaa")
+            peer.connect("74e330f2-37de-482c-92cc-f726e7c09fb5")
+        }
+
+        peer.onServerPing = {
+
+        }
+
+        peer.onAdminActionDecline = {
+            Log.e("ee","declined")
+        }
+        peer.onTextMessage = {
+            peer.sendText(it)
+            Log.e("new message", it)
         }
 
     }
