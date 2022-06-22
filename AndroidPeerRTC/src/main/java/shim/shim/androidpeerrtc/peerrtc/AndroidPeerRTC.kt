@@ -72,19 +72,19 @@ class AndroidPeerRTC(
         }
     }
 
-    fun setMediaSourcesView(
-        clientSourceView: MediaSourceView?,
+    fun setMediaSources(
+        ownedMediaSourcesView: MediaSourceView?,
         receivedSourceView: MediaSourceView?
     ) {
-        connectionInterface.mediaSourceView = clientSourceView
+        connectionInterface.mediaSourceView = ownedMediaSourcesView
         connectionInterface.mediaReceivedView = receivedSourceView
 
-        clientSourceView?.addConnectionInterface(connectionInterface)
+        ownedMediaSourcesView?.addConnectionInterface(connectionInterface)
         receivedSourceView?.addConnectionInterface(connectionInterface)
 
 
-        clientSourceView?.loadView {
-            clientSourceView.loadElement()
+        ownedMediaSourcesView?.loadView {
+            ownedMediaSourcesView.loadElement()
         }
 
         receivedSourceView?.loadView(null)
