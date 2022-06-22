@@ -3,21 +3,64 @@ var receivedConn
 var peer
 
 
+
 function initPeer(serverURL, configuration){
 	peer = new PeerRTC(serverURL, configuration)
 	peer.pingServer(10000)
+
+
+	peer.ontextmessage = message=>{
+	
+	}
+
+
+
+	peer.onsendfilemessage = (file, fileSizeSent)=>{
+		
+	}
+
+
+	peer.onfilemessage = (fname, fileTotalSize, fileBytesArray, done)=>{
+		
+	}
 
 	peer.oncloseP2P = ()=>{
 		AndroidPeer.onCloseP2P()
 	}
 
 
-	peer.ontextmessage = m =>{
-		console.log(m)
+	peer.onclose = ()=>{
+		
 	}
 
-	peer.onnewtrack = (newTrack, trackStreams) =>{
+	peer.onnewpayload = payload=>{
+		
+	}
 
+
+	peer.onnewprivatepayload = payload =>{
+		
+	}
+
+	peer.onpeerpayloads = payloads=>{
+		
+	}
+
+	peer.onpeerids = (ids) => {
+		
+	}
+
+
+	peer.onpeerconnectrequest = (peerId, accept, decline)=>{
+		
+
+	}
+
+	peer.onpeerconnectdecline = peerId => {
+		
+	}
+
+	peer.onnewtrack = (newTrack, trackStreams) => {
 		if (trackStreams) {
 			const stream = trackStreams[0]
 			if (stream) {
@@ -42,6 +85,28 @@ function initPeer(serverURL, configuration){
 				AndroidMediaConnection.initReceiveMediaStreamSource()
 			}
 		}
+	}
+
+
+	peer.onpeerconnectsuccess = peerId =>{
+		
+	}
+
+
+	peer.onadminbroadcastdata = data =>{
+		
+	}
+
+	peer.onadmingetallclientsdata = clientsData =>{
+		
+	}
+
+	peer.onadminactiondecline = ()=> {
+		
+	}
+
+	peer.onservererror = event =>{
+		
 	}
 
 }
@@ -91,6 +156,18 @@ function sourceConnCreateAnswer(sdp){
 	sourceConn.start()
 	sourceConn.createAnswer(sdp)
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
