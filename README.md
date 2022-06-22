@@ -51,6 +51,8 @@ peer.onStart = {p:AndroidPeerRTC->
 ```
 
 ## 📚 Api Reference
-There are no api reference and documentations yet. Feel free to contribute 😉.
+There are no api reference and documentations yet. Feel free to contribute 😉. The only classes on this library that needs documentation is the 
+[AndroidPeerRTC](https://github.com/ShimShim27/AndroidPeerRTC/blob/master/AndroidPeerRTC/src/main/java/shim/shim/androidpeerrtc/peerrtc/AndroidPeerRTC.kt)
+ and [MediaSourcesView](https://github.com/ShimShim27/AndroidPeerRTC/blob/master/AndroidPeerRTC/src/main/java/shim/shim/androidpeerrtc/view/MediaSourceView.kt).
 
 
