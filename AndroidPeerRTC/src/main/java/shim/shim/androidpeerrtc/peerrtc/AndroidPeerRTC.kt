@@ -66,7 +66,7 @@ class AndroidPeerRTC(
         )
         mediatorView.loadView {
             val url = if (serverURL == null) "null" else "'$serverURL'"
-            val config = if (configuration == null) "null" else "'$configuration'"
+            val config = if (configuration == null) "null" else "$configuration"
             mediatorView.evaluateJavascript("initPeer($url, $config)")
             onReady(this)
         }
