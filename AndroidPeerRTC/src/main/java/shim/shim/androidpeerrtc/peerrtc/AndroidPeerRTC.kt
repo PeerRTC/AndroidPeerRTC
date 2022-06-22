@@ -3,6 +3,7 @@ package shim.shim.androidpeerrtc.peerrtc
 import android.app.Activity
 import android.content.Context
 import org.json.JSONArray
+import org.json.JSONObject
 import shim.shim.androidpeerrtc.javascriptinterface.MediaConnectionJavascriptInterface
 import shim.shim.androidpeerrtc.javascriptinterface.PeerJavascriptInterface
 import shim.shim.androidpeerrtc.view.MediaSourceView
@@ -91,16 +92,79 @@ class AndroidPeerRTC(
     }
 
 
+    fun pingServer(millis: Long) {
+        mediatorView.evaluateJavascript("pingServer($millis)")
+    }
+
+    fun clearServerPinger() {
+        mediatorView.evaluateJavascript("clearServerPinger()")
+    }
+
+    fun sendText(text: String) {
+        mediatorView.evaluateJavascript("sendText($text)")
+    }
+
+
+    fun sendFile(fileName: String, fileBytesArray: ByteArray, chunkSize: Int = 1024) {
+        val fileBytesArrayString = fileBytesArray.toMutableList().toString()
+        mediatorView.evaluateJavascript("sendFile('$fileName', '$fileBytesArrayString', $chunkSize)")
+
+    }
+
+    fun addPayload(jsonObject: JSONObject) {
+        addPayload(jsonString = jsonObject.toString())
+    }
+
+    fun addPrivatePayload(jsonObject: JSONObject) {
+        addPrivatePayload(jsonString = jsonObject.toString())
+    }
+
+    fun addPayload(jsonString: String) {
+        mediatorView.evaluateJavascript("addPayload('$jsonString')")
+    }
+
+    fun addPrivatePayload(jsonString: String) {
+        mediatorView.evaluateJavascript("addPrivatePayload('$jsonString')")
+    }
+
+
+    fun getAllPeerPayloads() {
+        mediatorView.evaluateJavascript("getAllPeerPayloads()")
+    }
+
+
+    fun getPeerPayload(peerId: String) {
+        mediatorView.evaluateJavascript("getPeerPayload($peerId)")
+    }
+
+    fun closeP2P(){
+        mediatorView.evaluateJavascript("closeP2P()")
+    }
+
+    fun close(){
+        mediatorView.evaluateJavascript("close()")
+    }
+
+
+    fun getAllPeerIds(){
+        mediatorView.evaluateJavascript("getAllPeerIds()")
+    }
+
+
     fun connect(peerId: String) {
         mediatorView.evaluateJavascript("peer.connect('$peerId')")
     }
-
 
     fun start(isSecure: Boolean) {
         mediatorView.evaluateJavascript("start($isSecure)")
     }
 
-    fun pingServer(millis: Long) {
-        mediatorView.evaluateJavascript("pingServer($millis)")
+    fun adminBroadcastData(key:String, data:String){
+        mediatorView.evaluateJavascript("adminBroadcastData('$key', '$data')")
     }
+
+    fun adminGetAllClientsData(key: String){
+        mediatorView.evaluateJavascript("adminGetAllClientsData('$key')")
+    }
+
 }

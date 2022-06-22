@@ -199,6 +199,59 @@ function pingServer(everyMillis){
 }
 
 
+function clearServerPinger(){
+	peer.clearServerPinger()
+}
+
+function sendText(text){
+	peer.sendText(text)
+}
+
+
+function sendFile(fname, fileBytesArrayString, chunkSize) {
+	const file = new File( JSON.parse(fileBytesArrayString))
+	peer.sendFile(fname, sendFile, chunkSize)
+}
+
+function addPayload(jsonString){
+	peer.addPayload(JSON.parse(jsonString))
+}
+
+function addPrivatePayload(jsonString){
+	peer.addPrivatePayload(JSON.parse(jsonString))
+}
+
+
+function getAllPeerPayloads(){
+	peer.getAllPeerPayloads()
+}
+
+function getPeerPayload(peerId){
+	peer.getPeerPayload(peerId)
+}
+
+function closeP2P() {
+	peer.closeP2P()
+}
+
+
+function close(){
+	peer.close()
+}
+
+function getAllPeerIds(){
+	peer.getAllPeerIds()
+}
+
+
+function adminBroadcastData(key, data){
+	peer.adminBroadcastData(key, data)
+
+}
+
+function adminGetAllClientsData(key){
+	peer.adminGetAllClientsData(key)
+}
 
 
 
