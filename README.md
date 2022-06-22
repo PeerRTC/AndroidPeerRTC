@@ -5,8 +5,8 @@ sending raw files, audio streaming, video streaming, connecting to peers via uni
 it can be also used with Java.
 
 ## ❗ Note
-* There are no documentations for this library yet. Any contributors are welcome.
 * Add credits and attribution to this [repository](https://github.com/ShimShim27/AndroidPeerRTC) when using this library.
+* There are no documentations for this library yet. Any contributors are welcome.
 * This library is still in beta phase and can be unstable. 
 * Source code contributions and bug reports are encouraged.
 
