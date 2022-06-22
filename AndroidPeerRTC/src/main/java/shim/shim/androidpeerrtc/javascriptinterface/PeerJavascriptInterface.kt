@@ -1,6 +1,7 @@
 package shim.shim.androidpeerrtc.javascriptinterface
 
 import android.app.Activity
+import android.util.Log
 import android.webkit.JavascriptInterface
 import org.json.JSONArray
 import shim.shim.androidpeerrtc.peerrtc.AndroidPeerRTC
@@ -36,7 +37,7 @@ class PeerJavascriptInterface(
     @JavascriptInterface
     fun onFileMessage(
         fileName: String,
-        fileTotalSize: String,
+        fileTotalSize: Int,
         fileArrayStrings: String,
         done: Boolean
     ) {
@@ -182,7 +183,7 @@ class PeerJavascriptInterface(
     private fun fileArrayStringsToByteArray(arrayString: String): ByteArray {
         return arrayString.replace(Regex("\\s+"), "")
             .split(",")
-            .filter { it.matches(Regex("\\d")) }
-            .map { it.toByte() }.toByteArray()
+            .filter { it.matches(Regex("\\d+")) }
+            .map {(it.toUInt().toByte())}.toByteArray()
     }
 }

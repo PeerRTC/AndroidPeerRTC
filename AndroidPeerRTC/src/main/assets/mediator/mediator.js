@@ -32,7 +32,7 @@ function initPeer(serverURL, configuration){
 
 
 	peer.onfilemessage = (fname, fileTotalSize, fileBytesArray, done)=>{
-		AndroidPeer.onFileMessage(fname, fileTotalSize, fileBytesArray, done)
+		AndroidPeer.onFileMessage(fname, fileTotalSize, fileBytesArray.toString(), done)
 	}
 
 	peer.oncloseP2P = ()=>{

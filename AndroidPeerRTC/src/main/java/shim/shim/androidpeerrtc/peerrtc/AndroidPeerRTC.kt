@@ -29,7 +29,7 @@ class AndroidPeerRTC(
     var onSendFileMessage: ((fileBytesArray: ByteArray, fileSizeSent: Int) -> Unit)? = null
     var onFileMessage: ((
         fileName: String,
-        fileTotalSize: String,
+        fileTotalSize: Int,
         fileBytesArray: ByteArray,
         done: Boolean
     ) -> Unit)? = null
