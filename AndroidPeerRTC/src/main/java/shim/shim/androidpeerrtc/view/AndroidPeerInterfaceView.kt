@@ -36,7 +36,7 @@ abstract class AndroidPeerInterfaceView(context: Context, attr: AttributeSet?) :
                     lineNumber: Int,
                     sourceID: String?
                 ) {
-                    Log.e(TAG, message.toString())
+//                    Log.e(TAG, message.toString())
 
                 }
 
