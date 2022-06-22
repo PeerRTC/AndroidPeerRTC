@@ -45,7 +45,25 @@ class MediaSourceView(context: Context, attr: AttributeSet?) :
     override val TAG: String = "MediaSourceView"
 
     var mediaType = 0
+        set(value) {
+            field = value
+            webView.evaluateJavascript(
+                getStartStreamScript(),
+                null
+            )
+        }
+
+
     var cameraType = 0
+        set(value) {
+            field = value
+            webView.evaluateJavascript(
+                getStartStreamScript(),
+                null
+            )
+        }
+
+
     var mute = false
         set(value) {
             field = value
@@ -76,7 +94,7 @@ class MediaSourceView(context: Context, attr: AttributeSet?) :
 
     fun loadElement() {
         webView.evaluateJavascript(
-            "startStream($mediaType, $cameraType, $audioConstraints, $videoConstraints)",
+            getStartStreamScript(),
             null
         )
     }
@@ -84,6 +102,9 @@ class MediaSourceView(context: Context, attr: AttributeSet?) :
     fun addConnectionInterface(connectionInterface: MediaConnectionJavascriptInterface) {
         webView.addJavascriptInterface(connectionInterface, connectionInterface.name)
     }
+
+    private fun getStartStreamScript(): String =
+        "startStream($mediaType, $cameraType, $audioConstraints, $videoConstraints)"
 
 
 }

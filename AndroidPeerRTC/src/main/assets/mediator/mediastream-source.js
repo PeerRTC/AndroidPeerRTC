@@ -138,6 +138,22 @@ class MediaStreamSource{
 const source = new MediaStreamSource()
 
 function startStream(type, whichCam, audioConstraints, videoConstraints){
+	const video = document.getElementById("video").srcObject
+	const audio = document.getElementById("audio").srcObject
+	var tracks = []
+	if (video) {
+		tracks = tracks.concat(video.getTracks())
+	}
+
+	if (audio) {
+		tracks = tracks.concat(audio.getTracks())
+	}
+
+	// stop all existing tracks
+	for(const track of tracks){
+		track.stop()
+	}
+
 	source.getMediaDevices(devices=>{
 		var videoDeviceId = ""
 		var audioDeviceId =  ""
@@ -234,3 +250,6 @@ function enableVideo(enable){
 		track.enabled = enable
 	}
 }
+
+
+
