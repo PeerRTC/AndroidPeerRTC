@@ -101,7 +101,7 @@ class AndroidPeerRTC(
     }
 
     fun sendText(text: String) {
-        mediatorView.evaluateJavascript("sendText($text)")
+        mediatorView.evaluateJavascript("sendText('$text')")
     }
 
 
@@ -138,7 +138,7 @@ class AndroidPeerRTC(
 
 
     fun getPeerPayload(peerId: String) {
-        mediatorView.evaluateJavascript("getPeerPayload($peerId)")
+        mediatorView.evaluateJavascript("getPeerPayload('$peerId')")
     }
 
     fun closeP2P(){
