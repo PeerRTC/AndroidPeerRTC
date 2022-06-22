@@ -10,8 +10,8 @@ import shim.shim.androidpeerrtc.view.MediatorView
 
 class AndroidPeerRTC(
     context: Context,
-    private val serverURL: String?,
-    private val configuration: String?,
+    val serverURL: String?,
+    val configuration: String?,
     private val onReady: (peer: AndroidPeerRTC) -> Unit
 ) {
     private val mediatorView = MediatorView(context, null)
@@ -19,6 +19,10 @@ class AndroidPeerRTC(
         context as Activity,
         mediatorView
     )
+
+    var isConnectedToServer = false
+    var id: String? = null
+    var peerId:String? = null
 
     var onStart: (() -> Unit)? = null
     var onTextMessage: ((message: String) -> Unit)? = null

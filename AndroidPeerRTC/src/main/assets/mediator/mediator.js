@@ -137,7 +137,7 @@ function initPeer(serverURL, configuration){
 
 function start(isSecure){
 	peer.start(isSecure, p=>{
-		AndroidPeer.onStart()
+		AndroidPeer.onStart(p.id)
 	})
 }
 

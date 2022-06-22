@@ -50,6 +50,7 @@ class PeerJavascriptInterface(
     @JavascriptInterface
     fun onCloseP2P() {
         activity.runOnUiThread {
+            peer.peerId = null
             peer.onCloseP2P?.invoke()
         }
 
@@ -58,6 +59,8 @@ class PeerJavascriptInterface(
     @JavascriptInterface
     fun onClose() {
         activity.runOnUiThread {
+            peer.id = null
+            peer.isConnectedToServer = false
             peer.onClose?.invoke()
         }
     }
@@ -125,6 +128,7 @@ class PeerJavascriptInterface(
     @JavascriptInterface
     fun onPeerConnectSuccess(peerId: String) {
         activity.runOnUiThread {
+            peer.peerId = peerId
             peer.onPeerConnectSuccess?.invoke(peerId)
         }
     }
@@ -161,8 +165,10 @@ class PeerJavascriptInterface(
     }
 
     @JavascriptInterface
-    fun onStart() {
+    fun onStart(id:String) {
         activity.runOnUiThread {
+            peer.id = id
+            peer.isConnectedToServer = true
             peer.onStart?.invoke()
         }
     }
