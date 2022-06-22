@@ -64,10 +64,11 @@ class MainActivity : AppCompatActivity() {
 
         if (isPermissionGranted(RECORD_AUDIO) && isPermissionGranted(CAMERA)) {
             startPeerRtcConnection()
-            initButtons()
         } else {
             permissionReq.launch(arrayOf(RECORD_AUDIO, CAMERA))
         }
+
+        initButtons()
 
 
     }
