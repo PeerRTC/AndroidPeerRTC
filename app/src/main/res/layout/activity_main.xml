@@ -80,13 +80,25 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <shim.shim.androidpeerrtc.view.MediaSourceView
-            android:id="@+id/ownVideoView"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:layout_weight="1"
-            app:cameraType="back"
-            app:mediaType="video" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <shim.shim.androidpeerrtc.view.MediaSourceView
+                android:id="@+id/ownVideoView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:cameraType="back"
+                app:mediaType="video" />
+
+            <Button
+                android:id="@+id/switchCamButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Switch Cam"/>
+        </LinearLayout>
 
         <shim.shim.androidpeerrtc.view.MediaSourceView
             android:id="@+id/receivedVideoView"
