@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import org.json.JSONArray
 import shim.shim.androidpeerrtc.peerrtc.AndroidPeerRTC
+import shim.shim.androidpeerrtc.view.MediaSourceView
 import shim.shim.app.databinding.ActivityMainBinding
 import java.io.File
 import java.io.FileOutputStream
@@ -72,6 +73,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startPeerRtcConnection() {
+
         peer = AndroidPeerRTC(context = this, serverURL = null, configuration = null) {
             initPeerListeners()
             initMediaSources()
@@ -88,7 +90,7 @@ class MainActivity : AppCompatActivity() {
             peer.start(isSecure = true)
         }
         ownVideoView.onMediaNotAvailable = {
-            showMessage(message = "You had stop streaming video")
+            Log.i(TAG, "Switched camera or stopped")
         }
 
         receivedVideoView.onMediaAvailable = {
@@ -307,6 +309,12 @@ class MainActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             newFileResult.launch(intent)
 
+        }
+
+        binding.switchCamButton.setOnClickListener {
+            val videoView = binding.ownVideoView
+            videoView.cameraType = if (videoView.cameraType == MediaSourceView.BACK_CAM)  MediaSourceView.FRONT_CAM
+            else MediaSourceView.BACK_CAM
         }
 
     }
