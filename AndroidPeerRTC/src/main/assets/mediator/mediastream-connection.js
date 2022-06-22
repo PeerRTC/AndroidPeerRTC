@@ -47,7 +47,7 @@ class MediaStreamConnection{
 	
 
 		mediaStreamConn.addStreamToConnection()
-		mediaStreamConn.setCallbacks(onConnectionEstablished, oncloseP2P, onicecandididate , null, null, null, ()=>{}, onnewtrack)
+		mediaStreamConn.setCallbacks(onConnectionEstablished, oncloseP2P, onicecandididate , null, null, null, onnewtrack)
 	}
 
 
