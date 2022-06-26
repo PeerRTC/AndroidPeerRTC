@@ -88,7 +88,11 @@ class MainActivity : AppCompatActivity() {
         val receivedVideoView = binding.receivedVideoView
 
         ownVideoView.onMediaAvailable = {
-            peer.start(isSecure = true)
+            // prevent starting again if already started
+            if (!peer.isConnectedToServer){
+                peer.start(isSecure = true)
+            }
+
         }
         ownVideoView.onMediaNotAvailable = {
             Log.i(TAG, "Switched camera or stopped")
