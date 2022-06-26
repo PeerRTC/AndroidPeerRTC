@@ -181,7 +181,7 @@ function sourceConnCreateAnswer(sdp){
 }
 
 
-function acceptDeclineConnectRequest(requestId, accept){
+function acceptDeclineConnectRequest(requestId, isAccept){
 	const request = connectionRequests.get(requestId)
 	if (request) {
 		if (isAccept) {
