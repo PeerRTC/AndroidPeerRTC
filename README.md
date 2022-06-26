@@ -1,4 +1,4 @@
-# AndroidPeerRTC 📱
+# AndroidPeerRTC 🤖
 An android library built on top of [PeerRTC](https://github.com/PeerRTC/PeerRTC) module by utilizing the built in WebView module
 in android. This library is packed with easy to call api for native android that utilizes peer to peer connection like sending raw text, 
 sending raw files, audio streaming, video streaming, connecting to peers via unique id and more. The library is created with Kotlin. However,
