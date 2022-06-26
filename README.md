@@ -11,7 +11,8 @@ it can be also used with Java.
 * Source code contributions and bug reports are encouraged.
 
 ## 📖 Sample Project
-* [Video calling app](https://github.com/PeerRTC/AndroidPeerRTC/tree/master/app)
+* [Video Call App](https://github.com/PeerRTC/AndroidPeerRTC/blob/master/app/release/app-release.apk)
+* [Video Call App Source Code](https://github.com/PeerRTC/AndroidPeerRTC/tree/master/app)
 
 ## ⚙️ Setup
 
