@@ -32,7 +32,7 @@ allprojects {
 3. Add in [build.gradle](https://github.com/PeerRTC/AndroidPeerRTC/blob/master/app/build.gradle) (app level) file
 ```
 dependencies {
- implementation 'com.github.PeerRTC:AndroidPeerRTC:v.1.0.2-beta'
+ implementation 'com.github.PeerRTC:AndroidPeerRTC:v1.0.2-beta'
 }
 ```
 
