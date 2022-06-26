@@ -174,7 +174,7 @@ class MainActivity : AppCompatActivity() {
 
         peer.onStart = {
             peer.pingServer(10000)
-            binding.idDisplayView.text = "My id: ${peer.id}"
+            binding.idDisplayView.text = peer.id
         }
 
 
@@ -297,11 +297,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.sendMessageButton.setOnClickListener {
-            val inputBox = binding.messageInputBox
-            val message = inputBox.text.toString()
-            inputBox.text = null
-            addMessageToMessageBox(isSender = true, message = message)
-            peer.sendText(text = message)
+            if (peer.id == null){
+                showMessage(message = "Not yet connected to anyone")
+            } else{
+                val inputBox = binding.messageInputBox
+                val message = inputBox.text.toString()
+                inputBox.text = null
+                addMessageToMessageBox(isSender = true, message = message)
+                peer.sendText(text = message)
+            }
+
         }
 
         binding.endConnectionButton.setOnClickListener {
@@ -309,10 +314,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.sendFileButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "*/*"
-            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-            newFileResult.launch(intent)
+            if (peer.id == null) {
+                showMessage(message = "Not yet connected to anyone")
+            } else{
+                val intent = Intent(Intent.ACTION_GET_CONTENT)
+                intent.type = "*/*"
+                intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                newFileResult.launch(intent)
+            }
+
 
         }
 
